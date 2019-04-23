@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.Fullscreen"></activity>
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name"

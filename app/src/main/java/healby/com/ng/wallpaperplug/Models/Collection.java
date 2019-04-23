@@ -2,7 +2,7 @@ package healby.com.ng.wallpaperplug.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Collections {
+public class Collection {
     @SerializedName("id")
     private int id ;
 
@@ -14,7 +14,7 @@ public class Collections {
 
     @SerializedName("total_photos")
     private  int  totalPhotos ;
-    @SerializedName("cover_photos")
+    @SerializedName("cover_photo")
     private Photos coverPhoto =  new Photos();
     @SerializedName("user")
     private User user =  new User();
