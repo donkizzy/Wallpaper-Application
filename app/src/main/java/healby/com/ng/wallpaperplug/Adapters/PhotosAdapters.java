@@ -3,9 +3,11 @@ package healby.com.ng.wallpaperplug.Adapters;
 import android.content.Context;
 
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -16,7 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import healby.com.ng.wallpaperplug.Activities.Fullscreen;
 import healby.com.ng.wallpaperplug.Models.Photos;
 import healby.com.ng.wallpaperplug.R;
 import healby.com.ng.wallpaperplug.Utils.SquareImageView;
@@ -66,9 +71,20 @@ public class PhotosAdapters extends RecyclerView.Adapter<PhotosAdapters.ViewHold
         TextView textView ;
         @BindView(R.id.item_photo_photo)
         SquareImageView squareImageView;
+        @BindView(R.id.item_photo_layout_)
+        FrameLayout frameLayoutss ;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+        }
+        @OnClick(R.id.item_photo_layout_)
+        public void setFrameLayout(){
+            int position  =  getAdapterPosition() ;
+            String photoId = photos.get(position).getId();
+            Intent intent = new Intent(context, Fullscreen.class);
+            intent.putExtra("photoId" , photoId);
+            context.startActivity(intent);
+
         }
     }
 }
