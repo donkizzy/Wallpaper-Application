@@ -3,6 +3,7 @@ package healby.com.ng.wallpaperplug.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -12,6 +13,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import healby.com.ng.wallpaperplug.Models.Photos;
 import healby.com.ng.wallpaperplug.R;
 import healby.com.ng.wallpaperplug.Utils.Functions;
+import healby.com.ng.wallpaperplug.Utils.RealmController;
 import healby.com.ng.wallpaperplug.Webservices.ApiInterface;
 import healby.com.ng.wallpaperplug.Webservices.ServiceGenerator;
 import retrofit2.Call;
@@ -20,6 +22,7 @@ import retrofit2.Response;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -50,6 +53,14 @@ public class Fullscreen extends AppCompatActivity {
     private Unbinder unbinder ;
     private  Bitmap photoBitmap ;
 
+    private RealmController realmController ;
+    @BindDrawable(R.drawable.ic_favorite_white)
+    Drawable icFavourite ;
+    @BindDrawable(R.drawable.ic_favorite_red)
+    Drawable icFavourited ;
+
+    private Photos photos = new Photos();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +71,11 @@ public class Fullscreen extends AppCompatActivity {
         String photoId = intent.getStringExtra("photoId");
         getPhoto(photoId);
 
+        realmController =  new RealmController();
+        if (realmController.isExistPhoto(photoId)){
+            favourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
+        }
+
     }
 
     private  void getPhoto(String id ){
@@ -69,7 +85,7 @@ public class Fullscreen extends AppCompatActivity {
             @Override
             public void onResponse(Call<Photos> call, Response<Photos> response) {
                 if (response.isSuccessful()){
-                    Photos photos =  response.body() ;
+                     photos =  response.body() ;
                     updateUI(photos);
                 }
             }
@@ -108,15 +124,24 @@ public class Fullscreen extends AppCompatActivity {
     }
     @OnClick(R.id.floating_action_button_favourite)
     public void setFavourite(){
+        if (realmController.isExistPhoto(photos.getId())){
+            realmController.deletePhoto(photos);
+            favourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white));
+            Toast.makeText(this,"Remove favourite",Toast.LENGTH_LONG).show();
+        }else {
+            realmController.savePhoto(photos);
+            favourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_red));
+            Toast.makeText(this,"Favourited",Toast.LENGTH_LONG).show();
+        }
         floatingActionMenu.close(true);
     }
     @OnClick(R.id.floating_action_button_wallpaper)
     public void setWallpaper(){
         if (photoBitmap != null) {
             if (Functions.setWallpaper(Fullscreen.this,photoBitmap)){
-                Toast.makeText(this,"Wallpaper Succesfully Changed",Toast.LENGTH_LONG);
+                Toast.makeText(this,"Wallpaper Succesfully Changed",Toast.LENGTH_LONG).show();
             }else {
-                Toast.makeText(this,"Failed to change  Wallpaper ",Toast.LENGTH_LONG);
+                Toast.makeText(this,"Failed to change  Wallpaper ",Toast.LENGTH_LONG).show();
             }
         }
         floatingActionMenu.close(true);

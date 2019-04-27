@@ -2,9 +2,13 @@ package healby.com.ng.wallpaperplug.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Photos {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Photos extends RealmObject {
 
     @SerializedName("id")
+    @PrimaryKey
     private String id ;
     @SerializedName("description")
     private String description;
